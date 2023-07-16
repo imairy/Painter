@@ -1,12 +1,3 @@
-// ./config
-export const defaultOpts = {
-  type: 'company',
-  shape: 'circle',
-  color: 'red',
-  width: 300,
-  height: 300,
-  showTransparent: true,
-};
 
 export const defaultBorderOpts = {
   visible: true,
@@ -21,7 +12,7 @@ export const defaultInnerBorderOpts = {
 };
 
 export const defaultInnerLoopLineOpts = {
-  visible: false,
+  visible: true,
   width: 2,
   radius: 80,
 };
@@ -42,7 +33,7 @@ export const defaultTextOpts = {
 };
 
 export const defaultSubTextOpts = {
-  text: '地址：xx市xx区xx路xx号',
+  text: 'xx路xx号',
   visible: true,
   fontSize: 24,
   fontWeight: 600,
@@ -52,7 +43,7 @@ export const defaultSubTextOpts = {
 
 export const defaultCenterTextOpts = {
   text: '电子印章',
-  visible: false,
+  visible: true,
   fontSize: 24,
   fontWeight: 600,
   textBaseline: 'middle',
@@ -65,7 +56,7 @@ export const defaultSerNoOpts = {
   fontWeight: 600,
   radius: 120,
   text: '01234566667890',
-  startDegree: 45,
+  startDegree: 5,
   position: 'bottom',
 };
 
@@ -102,7 +93,7 @@ export const getFontStr = (opts) => {
 };
 
 export const Seal = {
-  draw(ctx, w, h, color, outerBorder, innerBorder, innerLoopLine, fiveStar, mainText, subText, centerText, serNo, type = 'company', shape = 'circle', transparent = true) {
+  draw(ctx, w, h, color, outerBorder, innerBorder, innerLoopLine, fiveStar, mainText, subText, centerText, serNo, shape = 'circle', transparent = true) {
     outerBorder = Object.assign({}, defaultBorderOpts, { color, shape }, outerBorder);
     innerBorder = Object.assign({}, defaultInnerBorderOpts, { color, shape }, innerBorder);
     innerLoopLine = Object.assign({}, defaultInnerLoopLineOpts, { color, shape }, innerLoopLine);
@@ -121,13 +112,14 @@ export const Seal = {
       outerBorder.radius = outerBorder.radius > maxRadius ? maxRadius : outerBorder.radius;
       this._drawCircle(ctx, outerBorder.width, outerBorder.color, outerBorder.radius, centerPoint);
     }
+    console.log(outerBorder)
 
     if (innerBorder.visible) {
       const maxInnerRadius = outerBorder.radius - outerBorder.width;
       innerBorder.radius = innerBorder.radius > maxInnerRadius ? maxInnerRadius : innerBorder.radius;
       this._drawCircle(ctx, innerBorder.width, innerBorder.color, innerBorder.radius, centerPoint);
     }
-
+    console.log(innerBorder)
     if (innerLoopLine.visible) {
       const maxInnerLoopRadius = innerBorder.radius - innerBorder.width;
       innerLoopLine.radius = innerLoopLine.radius > maxInnerLoopRadius ? maxInnerLoopRadius : innerLoopLine.radius;
@@ -187,7 +179,7 @@ export const Seal = {
     ctx.fillText(options.text, centerPoint[0], centerPoint[1] + options.distance);
   },
 
-  _writeSurroundText(ctx, options, centerPoint, startDegree = 25) {
+  _writeSurroundText(ctx, options, centerPoint) {
     ctx.font = getFontStr({
       fontWeight: options.fontWeight,
       fontSize: options.fontSize,
@@ -202,13 +194,13 @@ export const Seal = {
     const chars = options.text.split('').reverse();
 
     const textDegree = options.position === 'top'
-      ? -(startDegree * 2 + 180) / (count - 1)
-      : (startDegree * 2) / (count - 1);
+      ? -(options.startDegree * 2 + 180) / (count - 1)
+      : (options.startDegree * 2) / (count - 1);
 
     for (let i = 0; i < count; i++) {
       const char = chars[i];
 
-      ctx.rotate((i === 0 ? startDegree : textDegree) * Math.PI / 180);
+      ctx.rotate((i === 0 ? options.startDegree : textDegree) * Math.PI / 180);
 
       const { width } = ctx.measureText(char);
 

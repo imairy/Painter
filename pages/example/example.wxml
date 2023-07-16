@@ -6,7 +6,7 @@
   </view>
   <painter 
     customActionStyle="{{customActionStyle}}"
-    palette="{{paintPallette}}"
+    dancePalette="{{paintPallette}}"
     bind:imgOK="onImgOK"
     bind:touchEnd="touchEnd" 
     action="{{action}}"

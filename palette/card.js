@@ -2,7 +2,7 @@ export default class LastMayday {
   palette() {
     return ({
       width: '600rpx',
-      height: '1000rpx',
+      height: '1500rpx',
       background: '#eee',
       views: [
         _textDecoration('overline', 0),
@@ -98,6 +98,7 @@ export default class LastMayday {
           },
         },
         {
+          id: 'qrcode_id',
           type: 'qrcode',
           content: 'https://github.com/Kujiale-Mobile/Painter',
           css: {
@@ -139,13 +140,36 @@ export default class LastMayday {
         {
           type: 'seal',
           content: 'Painter',
+          shape: 'ellipse',
+          outerBorder: {
+            width: 4,
+            radius: 100,
+          },
+          innerBorder: {
+            radius: 90,
+          },
+          innerLoopLine: {
+            radius: 65,
+          },
+          mainText: {
+            radius: 85,
+            fontSize: 18,
+            startDegree: 15,
+          },
+          subText: {
+            visible: false,
+          },
+          serNo:{
+            radius: 80,
+            startDegree: 45,
+            visible: false,
+          },
           css: {
-            width: '100rpx',
-            height: '100rpx',
+            width: '400rpx',
+            height: '400rpx',
             color: 'rgba(0,0,0,1)',
             align: 'center',
-            left: '50%',
-            top: `${startTop + 8.5 * gapSize + 300}rpx`,
+            top: 'calc(qrcode_id.top)',
           }
         },
 

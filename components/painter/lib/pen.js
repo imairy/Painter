@@ -523,8 +523,8 @@ export default class Painter {
   _drawSeal(view) {
     this.ctx.save();
     const { width, height } = this._preProcess(view);
-    console.log(view);
-    Seal.draw(this.ctx, width, height, 'red');
+    console.log(width, height);
+    Seal.draw(this.ctx, width, height, 'red', view.outerBorder, view.innerBorder, view.innerLoopLine, view.fiveStar, view.mainText, view.subText, view.centerText, view.serNo, view.shape);
     this.ctx.restore();
     this._doBorder(view, width, height);
   }
