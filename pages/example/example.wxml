@@ -10,7 +10,7 @@
     bind:imgOK="onImgOK"
     bind:touchEnd="touchEnd" 
     action="{{action}}"
-    widthPixels="1000"
+    scaleRadio="3"
   />
   <image src="{{image}}" style="width: 654rpx; height: 1000rpx; margin-left:40rpx;"/>
 </view>

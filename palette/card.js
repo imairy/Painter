@@ -1,7 +1,7 @@
 export default class LastMayday {
   palette() {
     return ({
-      width: '654rpx',
+      width: '600rpx',
       height: '1000rpx',
       background: '#eee',
       views: [
@@ -66,6 +66,7 @@ export default class LastMayday {
             top: 'calc(text_id_2.bottom + 20rpx)',
           },
         },
+
         {
           type: 'text',
           text: '我设置了maxLines为1，看看会产生什么效果',
@@ -87,7 +88,7 @@ export default class LastMayday {
           type: 'image',
           url: '/palette/avatar.jpg',
           css: {
-            bottom: '40rpx',
+            top: `${startTop + 8.5 * gapSize + 180}rpx`,
             left: '40rpx',
             borderRadius: '50rpx',
             borderWidth: '10rpx',
@@ -100,7 +101,7 @@ export default class LastMayday {
           type: 'qrcode',
           content: 'https://github.com/Kujiale-Mobile/Painter',
           css: {
-            bottom: '40rpx',
+            top: `${startTop + 8.5 * gapSize + 180}rpx`,
             left: '180rpx',
             color: 'red',
             borderWidth: '10rpx',
@@ -115,7 +116,7 @@ export default class LastMayday {
           type: 'rect',
           css: {
             scalable: true,
-            bottom: '40rpx',
+            top: `${startTop + 8.5 * gapSize + 180}rpx`,
             right: '40rpx',
             color: 'radial-gradient(rgba(0, 0, 0, 0) 5%, #0ff 15%, #f0f 60%)',
             borderRadius: '20rpx',
@@ -125,27 +126,29 @@ export default class LastMayday {
           },
         },
         {
+          id: 'border_width_text',
           type: 'text',
           text: 'borderWidth',
           css: {
-            bottom: '40rpx',
+            top: `${startTop + 8.5 * gapSize + 180}rpx`,
             right: '200rpx',
             color: 'green',
             borderWidth: '2rpx',
           },
         },
         {
-          type: 'rect',
+          type: 'seal',
+          content: 'Painter',
           css: {
             width: '100rpx',
             height: '100rpx',
-            color: 'rgba(0,0,0,0.2)',
-            left: '50%',
-            top: '50%',
+            color: 'rgba(0,0,0,1)',
             align: 'center',
-            verticalAlign: 'center',
+            left: '50%',
+            top: `${startTop + 8.5 * gapSize + 300}rpx`,
           }
-        }
+        },
+
       ],
     });
   }
@@ -198,7 +201,7 @@ function _des(index, content) {
     text: content,
     css: {
       fontSize: '22rpx',
-      top: `${startTop + 8.5 * gapSize + 140}rpx`,
+      top: `${startTop + 9.5 * gapSize + 140}rpx`,
     },
   };
   if (index === 3) {

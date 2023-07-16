@@ -1,7 +1,8 @@
 {
 	"description": "项目配置文件。",
 	"packOptions": {
-		"ignore": []
+		"ignore": [],
+		"include": []
 	},
 	"setting": {
 		"urlCheck": false,
@@ -23,30 +24,18 @@
 			"outputPath": ""
 		},
 		"useCompilerModule": true,
-		"userConfirmedUseCompilerModuleSwitch": false
+		"userConfirmedUseCompilerModuleSwitch": false,
+		"condition": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "1.9.98",
-	"appid": "",
+	"libVersion": "2.33.0",
+	"appid": "wx7b662846b647618a",
 	"projectname": "Painter",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"condition": {
-		"search": {
-			"current": -1,
-			"list": []
-		},
-		"conversation": {
-			"current": -1,
-			"list": []
-		},
-		"game": {
-			"currentL": -1,
-			"list": []
-		},
-		"miniprogram": {
-			"current": -1,
-			"list": []
-		}
+	"condition": {},
+	"editorSetting": {
+		"tabIndent": "tab",
+		"tabSize": 2
 	}
 }

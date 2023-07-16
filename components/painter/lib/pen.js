@@ -1,3 +1,5 @@
+import { Seal } from './seal';
+
 const QR = require('./qrcode.js');
 const GD = require('./gradient.js');
 require('./string-polyfill.js');
@@ -87,6 +89,9 @@ export default class Painter {
         break;
       case 'qrcode':
         this._drawQRCode(view);
+        break;
+      case 'seal':
+        this._drawSeal(view);
         break;
       default:
         break;
@@ -231,7 +236,8 @@ export default class Painter {
             let tempLineHeight = subView.css.lineHeight ? subView.css.lineHeight.toPx() : subView.css.fontSize.toPx();
             lineHeight = Math.max(lineHeight, tempLineHeight);
           }
-          width = view.css.width ? view.css.width.toPx(false, this.style.width) - paddings[1] - paddings[3] : textLength;;
+          width = view.css.width ? view.css.width.toPx(false, this.style.width) - paddings[1] - paddings[3] : textLength;
+          ;
           const calLines = Math.ceil(textLength / width);
 
           lines += calLines;
@@ -514,6 +520,15 @@ export default class Painter {
     this.ctx.restore();
   }
 
+  _drawSeal(view) {
+    this.ctx.save();
+    const { width, height } = this._preProcess(view);
+    console.log(view);
+    Seal.draw(this.ctx, width, height, 'red');
+    this.ctx.restore();
+    this._doBorder(view, width, height);
+  }
+
   _drawQRCode(view) {
     this.ctx.save();
     const { width, height } = this._preProcess(view);
@@ -556,11 +571,12 @@ export default class Painter {
     this.ctx.restore();
     this._doBorder(view, width, height);
   }
+
   /**
-   * 
-   * @param {*} view 
+   *
+   * @param {*} view
    * @description 一行内文字多样式的方法
-   * 
+   *
    * 暂不支持配置 text-align，默认left
    * 暂不支持配置 maxLines
    */
@@ -587,7 +603,7 @@ export default class Painter {
         css.fontSize = '20rpx';
       }
       return `${textStyle} ${fontWeight} ${css.fontSize.toPx()}px "${css.fontFamily || 'sans-serif'}"`;
-    }
+    };
 
     // 遍历行内的文字数组
     for (let j = 0; j < view.textList.length; j++) {
@@ -747,7 +763,7 @@ export default class Painter {
           while (
             start + alreadyCount <= textArray[j].length &&
             (width - measuredWith > view.css.fontSize.toPx() || measuredWith - width > view.css.fontSize.toPx())
-          ) {
+            ) {
             if (measuredWith < width) {
               text = textArray[j].substr(start, ++alreadyCount);
             } else {
@@ -836,21 +852,21 @@ export default class Painter {
           if (view.id) {
             penCache.textLines[view.id]
               ? penCache.textLines[view.id].push({
+                text,
+                x,
+                y,
+                measuredWith,
+                textDecoration,
+              })
+              : (penCache.textLines[view.id] = [
+                {
                   text,
                   x,
                   y,
                   measuredWith,
                   textDecoration,
-                })
-              : (penCache.textLines[view.id] = [
-                  {
-                    text,
-                    x,
-                    y,
-                    measuredWith,
-                    textDecoration,
-                  },
-                ]);
+                },
+              ]);
           }
         }
       }
@@ -888,7 +904,7 @@ export default class Painter {
     }
     const box = view.css.shadow.replace(/,\s+/g, ',').split(/\s+/);
     if (box.length > 4) {
-      console.error("shadow don't spread option");
+      console.error('shadow don\'t spread option');
       return;
     }
     this.ctx.shadowOffsetX = parseInt(box[0], 10);
