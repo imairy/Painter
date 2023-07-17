@@ -1,4 +1,3 @@
-
 export const defaultBorderOpts = {
   visible: true,
   width: 6,
@@ -68,7 +67,7 @@ export const defaultSerNoOpts = {
  * @returns
  */
 export function getTransparentData(width, height, ctx) {
-  console.log(ctx)
+  console.log(ctx);
   let emptyBox = ctx.createImageData(width, height);
   let emptyBoxData = emptyBox.data;
 
@@ -93,6 +92,7 @@ export const getFontStr = (opts) => {
 };
 
 export const Seal = {
+  ellipseRadio: 4 / 7,
   draw(ctx, w, h, color, outerBorder, innerBorder, innerLoopLine, fiveStar, mainText, subText, centerText, serNo, shape = 'circle', transparent = true) {
     outerBorder = Object.assign({}, defaultBorderOpts, { color, shape }, outerBorder);
     innerBorder = Object.assign({}, defaultInnerBorderOpts, { color, shape }, innerBorder);
@@ -108,22 +108,21 @@ export const Seal = {
     //   ctx.putImageData(getTransparentData(w, h, ctx), 0, 0);
     // }
     const maxRadius = w / 2;
+
     if (outerBorder.visible) {
       outerBorder.radius = outerBorder.radius > maxRadius ? maxRadius : outerBorder.radius;
-      this._drawCircle(ctx, outerBorder.width, outerBorder.color, outerBorder.radius, centerPoint);
+      this._drawCircle(ctx, outerBorder, centerPoint, shape);
     }
-    console.log(outerBorder)
 
     if (innerBorder.visible) {
       const maxInnerRadius = outerBorder.radius - outerBorder.width;
       innerBorder.radius = innerBorder.radius > maxInnerRadius ? maxInnerRadius : innerBorder.radius;
-      this._drawCircle(ctx, innerBorder.width, innerBorder.color, innerBorder.radius, centerPoint);
+      this._drawCircle(ctx, innerBorder, centerPoint, shape);
     }
-    console.log(innerBorder)
     if (innerLoopLine.visible) {
       const maxInnerLoopRadius = innerBorder.radius - innerBorder.width;
       innerLoopLine.radius = innerLoopLine.radius > maxInnerLoopRadius ? maxInnerLoopRadius : innerLoopLine.radius;
-      this._drawCircle(ctx, innerLoopLine.width, innerLoopLine.color, innerLoopLine.radius, centerPoint);
+      this._drawCircle(ctx, innerLoopLine, centerPoint, shape);
     }
 
     if (fiveStar.visible) {
@@ -132,7 +131,7 @@ export const Seal = {
       ctx.fillStyle = fiveStar.color;
       ctx.strokeStyle = fiveStar.color;
 
-      ctx.translate(...centerPoint);
+      ctx.translate(centerPoint[0], shape === 'ellipse' ? centerPoint[1] * this.ellipseRadio : centerPoint[1]);
       ctx.rotate(Math.PI);
       ctx.beginPath();
 
@@ -148,26 +147,32 @@ export const Seal = {
       ctx.stroke();
       ctx.fill();
       ctx.restore();
+
     }
 
     if (mainText.visible) {
+      if (shape === 'ellipse') ctx.scale(1, this.ellipseRadio);
       this._writeSurroundText(ctx, mainText, centerPoint);
     }
 
     if (subText.visible) {
+      ctx.scale(1, 1);
       this._writeHorizontalText(ctx, subText, centerPoint);
     }
 
     if (centerText.visible) {
+      ctx.scale(1, 1);
       this._writeHorizontalText(ctx, centerText, centerPoint);
     }
     if (serNo.visible) {
+      ctx.scale(1, 1);
       this._writeSurroundText(ctx, serNo, centerPoint);
     }
 
+
   },
 
-  _writeHorizontalText(ctx, options, centerPoint) {
+  _writeHorizontalText(ctx, options, centerPoint, shape) {
     ctx.font = getFontStr({
       fontWeight: options.fontWeight,
       fontSize: options.fontSize,
@@ -179,13 +184,12 @@ export const Seal = {
     ctx.fillText(options.text, centerPoint[0], centerPoint[1] + options.distance);
   },
 
-  _writeSurroundText(ctx, options, centerPoint) {
+  _writeSurroundText(ctx, options, centerPoint, shape) {
     ctx.font = getFontStr({
       fontWeight: options.fontWeight,
       fontSize: options.fontSize,
     });
     ctx.fillStyle = options.color;
-
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
     ctx.translate(...centerPoint);
@@ -214,13 +218,33 @@ export const Seal = {
     ctx.restore();
   },
 
-  _drawCircle(ctx, width, color, radius, circleCenter) {
+  _drawCircle(ctx, options, circleCenter, shape) {
     ctx.translate(0, 0);
-    ctx.lineWidth = width;
-    ctx.strokeStyle = color;
+    ctx.lineWidth = options.width;
+    ctx.strokeStyle = options.color;
     ctx.beginPath();
-    ctx.arc(circleCenter[0], circleCenter[1], radius - width / 2, 0, Math.PI * 2);
+    if (shape === 'ellipse') {
+      // 用贝塞尔曲线画椭圆
+      const w = options.radius * 2;
+      const h = options.radius * 2 * this.ellipseRadio;
+      const x = circleCenter[0] - options.radius;
+      const y = (circleCenter[1] - options.radius) * this.ellipseRadio;
+      const kappa = 0.5522848;
+      const ox = (w / 2) * kappa; // 水平控制点偏移量
+      const oy = (h / 2) * kappa; // 垂直控制点偏移量
+      const xe = x + w; // 终点 x 坐标
+      const ye = y + h; // 终点 y 坐标
+      const xm = x + w / 2; // 控制点 x 坐标
+      const ym = y + h / 2; // 控制点 y 坐标
+      ctx.moveTo(x, ym);
+      ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+      ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+      ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+      ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+
+    } else ctx.arc(circleCenter[0], circleCenter[1], options.radius - options.width / 2, 0, Math.PI * 2);
     ctx.stroke();
+    ctx.scale(1, 1);
     ctx.save();
   },
 };

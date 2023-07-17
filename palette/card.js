@@ -144,20 +144,30 @@ export default class LastMayday {
           outerBorder: {
             width: 4,
             radius: 100,
+
           },
           innerBorder: {
             radius: 90,
+            visible: false,
+          },
+          fiveStar: {
+            size: 24
           },
           innerLoopLine: {
             radius: 65,
+            width: 1,
           },
           mainText: {
-            radius: 85,
+            radius: 90,
             fontSize: 18,
-            startDegree: 15,
+            startDegree: 0,
+            fontWeight: 900,
           },
           subText: {
             visible: false,
+          },
+          centerText: {
+            fontSize: 16,
           },
           serNo:{
             radius: 80,
